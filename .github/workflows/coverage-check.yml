@@ -9,6 +9,13 @@ on:
 jobs:
   coverage:
     runs-on: ubuntu-latest
+    environment: azure-prod
+    env:
+      DATABRICKS_SERVER_HOSTNAME: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_HTTP_PATH: ${{ secrets.TEST_PECO_WAREHOUSE_HTTP_PATH }}
+      DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+      DATABRICKS_CATALOG: peco
+      DATABRICKS_USER: ${{ secrets.TEST_PECO_SP_ID }}
     steps:
       #----------------------------------------------
       #       check-out repo and set-up python
@@ -53,12 +60,7 @@ jobs:
       # install your root project, if required
       #----------------------------------------------
       - name: Install library
-        run: poetry install --no-interaction
-      #----------------------------------------------
-      # install additional dependencies for e2e tests
-      #----------------------------------------------
-      - name: Install e2e test dependencies
-        run: poetry run pip install pyarrow
+        run: poetry install --no-interaction --all-extras
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------
