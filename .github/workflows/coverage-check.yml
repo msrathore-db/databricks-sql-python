@@ -61,23 +61,11 @@ jobs:
       - name: Install library
         run: poetry install --no-interaction --all-extras
       #----------------------------------------------
-      #              debug environment
+      #              run test suite
       #----------------------------------------------
-      - name: Debug environment variables
-        run: |
-          echo "Checking environment variables..."
-          echo "DATABRICKS_SERVER_HOSTNAME: ${{ secrets.DATABRICKS_HOST }}"
-          echo "DATABRICKS_HTTP_PATH: ${{ secrets.TEST_PECO_WAREHOUSE_HTTP_PATH }}"
-          echo "DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN != '' && '***' || 'NOT_SET' }}"
-          echo "DATABRICKS_USER: ${{ secrets.TEST_PECO_SP_ID }}"
-          
-      #              run test suite (quick subset)
-      #----------------------------------------------
-      - name: Run quick subset of tests with coverage
+      - name: Run tests with coverage
         continue-on-error: true
-        run: |
-          echo "Running quick subset of e2e tests for validation..."
-          poetry run python -m pytest \
+        run: poetry run python -m pytest \
             tests/e2e/test_driver.py::TestPySQLCoreSuite::test_escape_single_quotes \
             --cov=src --cov-report=xml --cov-report=term -v
       #----------------------------------------------
