@@ -61,6 +61,16 @@ jobs:
       - name: Install library
         run: poetry install --no-interaction --all-extras
       #----------------------------------------------
+      #              debug environment
+      #----------------------------------------------
+      - name: Debug environment variables
+        run: |
+          echo "Checking environment variables..."
+          echo "DATABRICKS_SERVER_HOSTNAME: ${{ secrets.DATABRICKS_HOST }}"
+          echo "DATABRICKS_HTTP_PATH: ${{ secrets.TEST_PECO_WAREHOUSE_HTTP_PATH }}"
+          echo "DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN != '' && '***' || 'NOT_SET' }}"
+          echo "DATABRICKS_USER: ${{ secrets.TEST_PECO_SP_ID }}"
+          
       #              run test suite (quick subset)
       #----------------------------------------------
       - name: Run quick subset of tests with coverage
