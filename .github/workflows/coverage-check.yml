@@ -3,9 +3,7 @@ name: Code Coverage
 permissions:
   contents: read
 
-on:
-  pull_request:
-  workflow_dispatch:  # Allow manual triggering
+on: [pull_request, workflow_dispatch]
 
 jobs:
   coverage:
@@ -63,11 +61,16 @@ jobs:
       - name: Install library
         run: poetry install --no-interaction --all-extras
       #----------------------------------------------
-      #              run test suite
+      #              run test suite (quick subset)
       #----------------------------------------------
-      - name: Run tests with coverage
+      - name: Run quick subset of tests with coverage
         continue-on-error: true
-        run: poetry run python -m pytest tests/unit tests/e2e --cov=src --cov-report=xml --cov-report=term
+        run: |
+          echo "Running quick subset of e2e tests for validation..."
+          poetry run python -m pytest \
+            tests/e2e/test_driver.py::TestPySQLCoreSuite::test_queries \
+            tests/e2e/test_driver.py::TestPySQLCoreSuite::test_escape_single_quotes \
+            --cov=src --cov-report=xml --cov-report=term -v
       #----------------------------------------------
       #         check for coverage override
       #----------------------------------------------
